@@ -1,0 +1,53 @@
+{% extends "modele.jinja" %}
+
+{% block contenu %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flashes p-2">
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<div class="container border border-2 rounded bg-body-secondary p-0 mt-3">
+    <div class="row g-0">
+            <form class="col-lg-4 position-relativep-3 p-4" method="post" action="" enctype="multipart/form-data">
+                <label class="w-100 h-100 d-flex justify-content-center align-items-center border border-2 rounded bg-hover" for="file">
+                    <i class="bi bi-download position-absolute" style="font-size: 3rem;margin-top: 90px"></i>
+                    <input type="hidden" name="id" id="id" content="{{ produit.id_produit }}">
+                    <input type="file" style="display: none" name="file[]" id="file" accept="image/png" />
+                    <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
+                    <button class="btn btn-primary m-2" type="submit">Modifier</button>
+                </label>
+            </form>
+        <div class="col-lg-8 d-flex flex-column">
+            <div class="mb-auto p-3">
+                <h1>{{ produit.titre }}</h1>
+                <p>{{ produit.description }}</p>
+                <p>En inventaire: <span class="fw-bold">{{ produit.quantite }}</span></p>
+                <div class="d-flex justify-content-center align-items-end">
+                    <p class="fw-bold text-danger m-0">{{ produit.prix }}$</p>
+                </div>
+            </div>
+            <div class="align-items-end card-footer border-top border-3 bg-light">
+                <div class="m-2">
+                        <div class="d-flex justify-content-center">
+                            <div class="btn-group w-50" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-dark" onclick="dec('amount-{{ produit.id_produit }}')">-</button>
+                                <input class="w-75 text-center text-bg-dark border border-0 user-select-none" name="amount-{{ produit.id_produit }}" type="number" value="0">
+                                <button type="button" class="btn btn-dark" onclick="inc('amount-{{ produit.id_produit }}')">+</button>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="hidden" name="id" value="{{ produit.id_produit }}" class="visually-hidden">
+                        </div>
+                        <div class="d-flex justify-content-center p-1">
+                            <button type="button" value="add_to_cart" name="action" id="action" class="btn btn-dark">Ajouter au panier</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

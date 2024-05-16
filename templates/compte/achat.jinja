@@ -1,0 +1,54 @@
+{% extends "modele.jinja" %}
+
+{% block contenu %}
+    {% if session.connecter %}
+    <h1 class="d-flex justify-content-center">Mes achats</h1>
+    {% if achats == [] %}
+        <h3 class="d-flex justify-content-center text-center fw-bold mt-3">
+            Vous n'avez pas encore effectué d'achats.
+        </h3>
+    {% else %}
+        <div class="table-responsive-sm">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Produit</th>
+                    <th scope="col">Quantité</th>
+                    <th scope="col">Commandez le</th>
+                    <th scope="col">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for a in achats %}
+                    <tr>
+                        <td>
+                            <a href="/produits/{{ a[4] }}" class="d-flex align-items-center">
+                                {% if ('static/images/produits/produit' ~ a[4] ~ '.png') | file_exists %}
+                                    <img class="me-2" src="../../static/images/produits/produit{{ a[4] }}.png" alt="image"
+                                         style="max-width: 50px; max-height: 50px;">
+                                {% else %}
+                                    <img class="me-2" src="/static/images/produits/produit.png"
+                                         style="max-width: 50px; max-height: 50px;" alt="image"/>
+                                {% endif %}
+                                <span>{{ a[5] }}</span>
+                            </a>
+                        </td>
+                        <td class="p-3">{{ a[2] }}</td>
+                        <td class="p-3">{{ a[1] }}</td>
+                        <td class="p-3 text-danger fw-bold">{{ a[6] * a[2] }}$</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+        {% else %}
+            <div class="d-flex justify-content-center text-center fw-bold">
+                            <h1>Vous devez être connecté pour accéder aux achats.</h1>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-dark m-2" href="/compte/connexion">Se connecter</a>
+                            <a class="btn btn-dark m-2" href="/compte/inscription">S'inscrire</a>
+                        </div>
+        {% endif %}
+{% endblock %}

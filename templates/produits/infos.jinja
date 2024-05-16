@@ -1,0 +1,110 @@
+{% extends "modele.jinja" %}
+
+{% block contenu %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flashes p-2">
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<div class="container border border-2 rounded bg-body-secondary p-0">
+    <div class="row g-0">
+        <div class="col-lg-4 position-relative">
+            {% if ('static/images/produits/produit' ~ produit.id_produit ~ '.png') | file_exists %}
+                <img src="../../static/images/produits/produit{{ produit.id_produit }}.png" class="img-fluid rounded-start p-0" alt="" />
+                {% if session.est_administrateur %}
+                    <div class="dropdown position-absolute top-0 end-0">
+                        <button class="btn border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/produits/{{ produit.id_produit }}/modifier_image">Modifier l'image</a></li>
+                            <li>
+                                <div class="dropdown-item text-danger" id="modal1" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop_delete">Supprimer l'image</div>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+            {% else %}
+                <img src="../../static/images/produits/produit.png" class="img-fluid rounded-start p-0" alt="" />
+                {% if session.est_administrateur %}
+                    <form id="{{ produit.id_produit }}" method="post" action="/produits/{{ produit.id_produit }}/uplodeImage" enctype="multipart/form-data">
+                        <label class="icon-link icon-link-hover" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);"  for="file{{ produit.id_produit }}">
+                            <i class="bi bi-download position-absolute top-0 end-0 me-2 mt-1"></i>
+                            <input type="file" id="file{{ produit.id_produit }}" style="display: none" name="file[]"
+                                   accept="image/png" data-original-title="upload photos"
+                                   onchange="document.getElementById('{{ produit.id_produit }}').submit()">
+                        </label>
+                    </form>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="col-lg-8 d-flex flex-column">
+            <div class="mb-auto p-3">
+                <h1>{{ produit.titre }}</h1>
+                <p>{{ produit.description }}</p>
+                <p>En inventaire: <span class="fw-bold">{{ produit.quantite }}</span></p>
+                <div class="d-flex justify-content-center align-items-end">
+                    <p class="fw-bold text-danger m-0">{{ produit.prix }}$</p>
+                </div>
+            </div>
+            <div class="align-items-end card-footer border-top border-3 bg-light">
+                <div class="m-2">
+                {% if produit.quantite <= 0 %}
+                    <div class="d-flex justify-content-center text-center fw-bold">
+                        Se produit n'est plus en inventaire, revenez plus tard.
+                    </div>
+                {% elif session.connecter %}
+                    <form method="post" action="/compte/panier">
+                        <div class="d-flex justify-content-center">
+                            <div class="btn-group w-50" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-dark" onclick="dec('amount-{{ produit.id_produit }}')">-</button>
+                                <input class="w-75 text-center text-bg-dark border border-0 user-select-none" name="amount-{{ produit.id_produit }}" type="number" value="0">
+                                <button type="button" class="btn btn-dark" onclick="inc('amount-{{ produit.id_produit }}')">+</button>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="hidden" name="id" value="{{ produit.id_produit }}" class="visually-hidden">
+                        </div>
+                        <div class="d-flex justify-content-center p-1">
+                            <button type="submit" value="add_to_cart" name="action" id="action" class="btn btn-dark">Ajouter au panier</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="d-flex justify-content-center text-center fw-bold">
+                        Pour commender se produit vous devez etre connecter
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-dark m-2" href="/compte/connexion">Se connecter</a>
+                        <a class="btn btn-dark m-2" href="/compte/inscription">S'inscrire</a>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="modal fade" id="staticBackdrop_delete" data-bs-backdrop="static"
+                data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="navbar-brand rounded me-2" style="width: 20%;">IShop</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="d-flex justify-content-center p-3">
+                                <span>Etes vous sur de vouloir supprimer definitivement cette image ?</span>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <a class="btn" href="/produits/{{ produit.id_produit }}/supprimer_image">Oui</a>
+                            <button type="button" class="btn" data-bs-dismiss="modal">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
