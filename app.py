@@ -11,7 +11,8 @@ import psycopg2
 from produits import produits_bp
 from compte import compte_bp
 import bd
-from bd import get_produits, get_produits_by_stock, get_produits_by_titre, get_produits_from_id, buy_produit, get_produits_by_prix
+from bd import get_produits, get_produits_by_stock, get_produits_by_titre, get_produits_from_id, buy_produit, \
+    get_produits_by_prix
 
 UPLOAD_FOLDER = os.path.join('static', 'images', 'produits')
 
@@ -67,7 +68,6 @@ def rechercher():
 def upload_file(identifiant, file):
     if file:
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], "produit" + identifiant + ".png"))
-
 
 
 @app.errorhandler(400)
@@ -132,3 +132,13 @@ def suggestions():
         suggestions = get_produits_by_titre(conn, keyword, prix_min, prix_max)
 
     return jsonify(suggestions)
+
+
+@app.route('/verification_identifiant', methods=['POST'])
+def verification_identifiant():
+    email = request.json.get('email')
+    email_used = False
+    with bd.creer_connexion() as conn:
+        email_used = bd.verify_user(conn, email)
+
+    return jsonify({'utilise': email_used})

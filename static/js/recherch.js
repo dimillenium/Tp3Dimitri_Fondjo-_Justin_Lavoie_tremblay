@@ -75,7 +75,49 @@ function afficherSuggestions() {
 function initialisation() {
     document
         .getElementById("keyword")
-        .addEventListener("input", afficherSuggestions)
+        .addEventListener('input', afficherSuggestions)
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    ajouterEmail();
+});
+function ajouterEmail() {
+    let email = document.getElementById('email');
+
+    email.addEventListener('blur', function () {
+        // Obtenez la valeur actuelle du champ email
+        const valeurRecherche = email.value.trim();
+
+        // Vérifiez si le champ email contient du texte
+        if (valeurRecherche !== '') {
+            // Envoyer la requête AJAX au serveur pour vérifier l'email
+            fetch('/verification_identifiant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: valeurRecherche })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.utilise) {
+                    // Affiche un message si l'email est déjà utilisé
+                    console.log('Cet email est déjà utilisé.');
+                    document.getElementById('email-error').innerText = 'Cet email est déjà utilisé.';
+                    email.classList.add('is-invalid');
+                    email.setCustomValidity('Cet email est déjà utilisé.');
+                } else {
+                    // L'email n'est pas utilisé
+                    console.log('Cet email est disponible.');
+                    document.getElementById('email-error').innerText = '';
+                    email.setCustomValidity('');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+            });
+        }
+    });
 }
 
 window.addEventListener("load", initialisation)
