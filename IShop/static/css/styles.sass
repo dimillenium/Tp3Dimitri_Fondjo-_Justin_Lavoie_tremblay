@@ -1,0 +1,59 @@
+// Les fichiers sAss n'ont pas de point-virgule ni d'accolade
+// Vous pouvez utiliser des .scss OU .sass à votre choix
+
+@import "bootstrap"
+
+
+body
+    @extend .container
+
+
+header
+    @extend .pt-5, .pb-3
+
+    h1
+        @extend .display-5
+
+    p
+        @extend .lead
+
+
+nav, main, footer
+    @extend .pb-5
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button
+  -webkit-appearance: none
+  margin: 0
+
+/* Firefox */
+input[type=number]
+  -moz-appearance: textfield
+
+img
+    @extend .img-thumbnail, .d-block
+
+    max-width: 150px
+    height: auto
+
+.bg-hover
+    background-color: gray
+
+.bg-hover:hover
+    background-color: #5ea2bc
+
+nav
+    ul
+        @extend .nav, .nav-pills
+
+        li
+            @extend .nav-item
+
+            a
+                @extend .nav-link
+
+                &:hover
+                    color: white
+                    background-color: var(--bs-primary)
+

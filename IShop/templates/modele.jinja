@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <title>IShop</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="/static/js/javascript.js" ></script>
+    <script defer="defer" src="/static/js/recherch.js" ></script>
+    <script defer="defer" src="/static/js/pages.js" ></script>
+    <link rel="stylesheet" href="/static/css/styles.css"/>
+</head>
+
+<body>
+<header class="mb-5">
+    <nav class="navbar fixed-top navbar-expand-md bg-body-tertiary p-1">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">IShop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Produit</a>
+                    </li>
+                </ul>
+                <a class="icon-link nav-link me-3 mb-3 btn position-relative border-0" href="/compte/panier">
+                    <i class="bi bi-cart4" style="font-size: 2rem;"></i>
+                    {% if connecter and panier | length != 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger p-1" style="font-size: 10px;">
+                        {{ nbPanier }}
+                        <span class="visually-hidden">Nombre d'items au panier</span>
+                    </span>
+                    {% endif %}
+                </a>
+            <div class="dropdown">
+                    <button class="btn border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if session.connecter %}
+                        <span class="position-absolute mt-2 translate-middle p-1 bg-success border border-light rounded-circle" style="font-size: 3px; margin-left: 28px">
+                            <span class="visually-hidden">Nouvelles  alertes</span>
+                        </span>
+                        {% endif %}
+                        <i class="bi bi-person-circle" style="font-size: 2rem;"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                        {% if session.connecter %}
+                        <li><span class="dropdown-item-text">{{ session.nom }}</span></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item disabled" aria-disabled="true" href="update_user" >Modifiez les informations</a></li>
+                        <li>
+                            <a class="btn text-white d-flex justify-content-center" href="/compte/deconnexion">Déconnexion</a>
+                        </li>
+                        {% else %}
+                        <li><a class="dropdown-item" href="/compte/connexion">Connexion</a></li>
+                        <li><a class="dropdown-item" href="/compte/inscription">Inscription</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+        </div>
+            </div>
+
+    </nav>
+</header>
+<main>
+    {% block contenu %}
+    {% endblock %}
+</main>
+<footer class="text-center bg-dark text-white mt-3">
+    <p class="p-3">
+        Justin Lavoie-Tremblay et Dimitri Fondjo - copyright 2024©
+    </p>
+</footer>
+</body>
+
+</html>
