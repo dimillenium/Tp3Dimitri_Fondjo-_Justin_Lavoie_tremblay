@@ -46,7 +46,7 @@ def get_curseur(self):
 def get_produits(conn):
     "Retourne les produits"
     with conn.get_curseur() as curseur:
-        curseur.execute("SELECT * FROM produit")
+        curseur.execute("SELECT * FROM produit ORDER BY id_produit DESC LIMIT 5")
         return curseur.fetchall()
 
 

@@ -33,13 +33,19 @@ def file_exists(file_path):
 
 @app.route("/")
 def accueil():
-    """Affiche produit sur la route / """
-    produits = None
-
+    """Affiche les produits sur la route / """
     with bd.creer_connexion() as conn:
-        produits = get_produits_by_stock(conn)
+        produits = get_produits(conn)
+    connecter = session.get('connecter', False)
+    return render_template("accueil.jinja", produits=produits, connecter=connecter)
 
-    return render_template("accueil.jinja", produits=produits)
+
+@app.route("/get_latest_products")
+def get_latest_products_route():
+    with bd.creer_connexion() as conn:
+        produits = get_produits(conn)
+    connecter = session.get('connecter', False)
+    return jsonify({'produits': produits, 'connecter': connecter})
 
 
 @app.route("/recherche", methods=["GET", "POST"])
